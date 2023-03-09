@@ -1,0 +1,25 @@
+- name: Setup container hosts
+  hosts: librenms
+  tasks:
+  - name: Create LibreNMS directory
+    file:
+      path: /opt/librenms/librenms
+      state: directory
+      owner: "{{ ansible_facts['user_uid'] }}"
+      group: "{{ ansible_facts['user_gid'] }}"
+      mode: 0775
+      recurse: yes
+
+  - name: LibreNMS Docker compose template
+    ansible.builtin.template:
+      src: "librenms-docker-compose.yml.j2"
+      dest: "/opt/librenms/librenms-docker-compose.yml"
+      owner: "{{ ansible_facts['user_uid'] }}"
+      group: "{{ ansible_facts['user_gid'] }}"
+
+  - name: LibreNMS env template
+    ansible.builtin.template:
+      src: "librenms.env.j2"
+      dest: "/opt/librenms/librenms.env"
+      owner: "{{ ansible_facts['user_uid'] }}"
+      group: "{{ ansible_facts['user_gid'] }}"
